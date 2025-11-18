@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  calculator-mcp:
+    build: .
+    container_name: calculator-mcp-server
+    ports:
+      - "8022:8022"
+    volumes:
+      - ./calculation_history.csv:/app/calculation_history.csv
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8022/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
