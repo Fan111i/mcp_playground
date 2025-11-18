@@ -1,16 +1,3 @@
-"""
-Jedox MCP Server - Basic Jedox API Integration
-
-This server provides MCP tools for interacting with Jedox:
-- Read data from Jedox Cubes
-- Write data to Jedox Cubes
-- List databases and cubes
-- Manage dimensions
-
-Author: Fan
-Created: 2025-01-19
-"""
-
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import requests
@@ -450,7 +437,7 @@ async def handle_mcp(request: Request):
                 cell_value = read_jedox_cell(database, cube, coordinates)
 
                 if isinstance(cell_value, dict) and "error" in cell_value:
-                    result_text = f"❌ Error: {cell_value['error']}"
+                    result_text = f"Error: {cell_value['error']}"
                 else:
                     result_text = f"Cell value at {coordinates}:\n{cell_value}"
 
@@ -475,9 +462,9 @@ async def handle_mcp(request: Request):
                 result = write_jedox_cell(database, cube, coordinates, value)
 
                 if result.get("status") == "success":
-                    result_text = f"✅ {result['message']}"
+                    result_text = f"Success: {result['message']}"
                 else:
-                    result_text = f"❌ Error: {result.get('error')}"
+                    result_text = f"Error: {result.get('error')}"
 
                 return JSONResponse(content={
                     "jsonrpc": "2.0",
@@ -594,7 +581,7 @@ if __name__ == "__main__":
     import uvicorn
 
     print("=" * 60)
-    print("🚀 Starting Jedox MCP Server")
+    print("Starting Jedox MCP Server")
     print("=" * 60)
     print(f"Jedox Server: {JEDOX_SERVER}")
     print(f"Token configured: {bool(JEDOX_TOKEN and JEDOX_TOKEN != 'your_access_token_here')}")
