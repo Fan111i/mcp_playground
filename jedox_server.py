@@ -7,8 +7,7 @@ import logging
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -25,12 +24,13 @@ JEDOX_TOKEN = os.getenv("JEDOX_TOKEN", "your_access_token_here")
 # Request headers for Jedox API
 JEDOX_HEADERS = {
     "Authorization": f"Bearer {JEDOX_TOKEN}",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
 }
 
 # ========================================
 # Jedox API Helper Functions
 # ========================================
+
 
 def jedox_login(username: str, password: str) -> Dict[str, str]:
     """
@@ -45,17 +45,14 @@ def jedox_login(username: str, password: str) -> Dict[str, str]:
     """
     try:
         url = f"{JEDOX_SERVER}/api/auth/login"
-        response = requests.post(
-            url,
-            json={"username": username, "password": password}
-        )
+        response = requests.post(url, json={"username": username, "password": password})
         response.raise_for_status()
         data = response.json()
         logger.info(f"Successfully logged in as {username}")
         return {
             "access_token": data.get("access_token"),
             "refresh_token": data.get("refresh_token"),
-            "expires_in": data.get("expires_in", 3600)
+            "expires_in": data.get("expires_in", 3600),
         }
     except Exception as e:
         logger.error(f"Login failed: {str(e)}")
@@ -158,7 +155,9 @@ def read_jedox_cell(database: str, cube: str, coordinates: List[str]) -> Any:
         return {"error": str(e)}
 
 
-def write_jedox_cell(database: str, cube: str, coordinates: List[str], value: Any) -> Dict[str, str]:
+def write_jedox_cell(
+    database: str, cube: str, coordinates: List[str], value: Any
+) -> Dict[str, str]:
     """
     Write a value to a Jedox Cube cell
 
@@ -173,12 +172,7 @@ def write_jedox_cell(database: str, cube: str, coordinates: List[str], value: An
     """
     try:
         url = f"{JEDOX_SERVER}/api/databases/{database}/cubes/{cube}/cells/write"
-        payload = {
-            "cells": [{
-                "coordinates": coordinates,
-                "value": value
-            }]
-        }
+        payload = {"cells": [{"coordinates": coordinates, "value": value}]}
 
         response = requests.post(url, json=payload, headers=JEDOX_HEADERS)
         response.raise_for_status()
@@ -186,7 +180,7 @@ def write_jedox_cell(database: str, cube: str, coordinates: List[str], value: An
         logger.info(f"Wrote value {value} to {coordinates}")
         return {
             "status": "success",
-            "message": f"Successfully wrote {value} to cell {coordinates}"
+            "message": f"Successfully wrote {value} to cell {coordinates}",
         }
 
     except Exception as e:
@@ -194,7 +188,9 @@ def write_jedox_cell(database: str, cube: str, coordinates: List[str], value: An
         return {"status": "error", "error": str(e)}
 
 
-def read_jedox_range(database: str, cube: str, coordinates_list: List[List[str]]) -> List[Dict]:
+def read_jedox_range(
+    database: str, cube: str, coordinates_list: List[List[str]]
+) -> List[Dict]:
     """
     Read multiple cells from Jedox Cube
 
@@ -231,11 +227,7 @@ tools = [
     {
         "name": "jedox_list_databases",
         "description": "List all available Jedox databases",
-        "inputSchema": {
-            "type": "object",
-            "properties": {},
-            "required": []
-        }
+        "inputSchema": {"type": "object", "properties": {}, "required": []},
     },
     {
         "name": "jedox_list_cubes",
@@ -243,13 +235,10 @@ tools = [
         "inputSchema": {
             "type": "object",
             "properties": {
-                "database": {
-                    "type": "string",
-                    "description": "Database name"
-                }
+                "database": {"type": "string", "description": "Database name"}
             },
-            "required": ["database"]
-        }
+            "required": ["database"],
+        },
     },
     {
         "name": "jedox_list_dimensions",
@@ -257,13 +246,10 @@ tools = [
         "inputSchema": {
             "type": "object",
             "properties": {
-                "database": {
-                    "type": "string",
-                    "description": "Database name"
-                }
+                "database": {"type": "string", "description": "Database name"}
             },
-            "required": ["database"]
-        }
+            "required": ["database"],
+        },
     },
     {
         "name": "jedox_read_cell",
@@ -271,22 +257,16 @@ tools = [
         "inputSchema": {
             "type": "object",
             "properties": {
-                "database": {
-                    "type": "string",
-                    "description": "Database name"
-                },
-                "cube": {
-                    "type": "string",
-                    "description": "Cube name"
-                },
+                "database": {"type": "string", "description": "Database name"},
+                "cube": {"type": "string", "description": "Cube name"},
                 "coordinates": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Cell coordinates, e.g., ['2024', 'Beijing', 'Revenue']"
-                }
+                    "description": "Cell coordinates, e.g., ['2024', 'Beijing', 'Revenue']",
+                },
             },
-            "required": ["database", "cube", "coordinates"]
-        }
+            "required": ["database", "cube", "coordinates"],
+        },
     },
     {
         "name": "jedox_write_cell",
@@ -294,26 +274,17 @@ tools = [
         "inputSchema": {
             "type": "object",
             "properties": {
-                "database": {
-                    "type": "string",
-                    "description": "Database name"
-                },
-                "cube": {
-                    "type": "string",
-                    "description": "Cube name"
-                },
+                "database": {"type": "string", "description": "Database name"},
+                "cube": {"type": "string", "description": "Cube name"},
                 "coordinates": {
                     "type": "array",
                     "items": {"type": "string"},
-                    "description": "Cell coordinates"
+                    "description": "Cell coordinates",
                 },
-                "value": {
-                    "type": "number",
-                    "description": "Value to write"
-                }
+                "value": {"type": "number", "description": "Value to write"},
             },
-            "required": ["database", "cube", "coordinates", "value"]
-        }
+            "required": ["database", "cube", "coordinates", "value"],
+        },
     },
     {
         "name": "jedox_read_range",
@@ -325,21 +296,19 @@ tools = [
                 "cube": {"type": "string"},
                 "coordinates_list": {
                     "type": "array",
-                    "items": {
-                        "type": "array",
-                        "items": {"type": "string"}
-                    },
-                    "description": "List of coordinate arrays"
-                }
+                    "items": {"type": "array", "items": {"type": "string"}},
+                    "description": "List of coordinate arrays",
+                },
             },
-            "required": ["database", "cube", "coordinates_list"]
-        }
-    }
+            "required": ["database", "cube", "coordinates_list"],
+        },
+    },
 ]
 
 # ========================================
 # MCP Endpoint
 # ========================================
+
 
 @app.post("/mcp")
 async def handle_mcp(request: Request):
@@ -359,11 +328,9 @@ async def handle_mcp(request: Request):
         # ========== MCP Method: tools/list ==========
         if method == "tools/list":
             logger.info("Returning tools list")
-            return JSONResponse(content={
-                "jsonrpc": "2.0",
-                "result": {"tools": tools},
-                "id": request_id
-            })
+            return JSONResponse(
+                content={"jsonrpc": "2.0", "result": {"tools": tools}, "id": request_id}
+            )
 
         # ========== MCP Method: tools/call ==========
         elif method == "tools/call":
@@ -379,16 +346,13 @@ async def handle_mcp(request: Request):
                 for db in databases:
                     result_text += f"- {db.get('name')} (ID: {db.get('id')})\n"
 
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "result": {
-                        "content": [{
-                            "type": "text",
-                            "text": result_text
-                        }]
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {"content": [{"type": "text", "text": result_text}]},
+                        "id": request_id,
+                    }
+                )
 
             # --- Tool: jedox_list_cubes ---
             elif tool_name == "jedox_list_cubes":
@@ -398,16 +362,13 @@ async def handle_mcp(request: Request):
                 for cube in cubes:
                     result_text += f"- {cube.get('name')} (ID: {cube.get('id')})\n"
 
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "result": {
-                        "content": [{
-                            "type": "text",
-                            "text": result_text
-                        }]
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {"content": [{"type": "text", "text": result_text}]},
+                        "id": request_id,
+                    }
+                )
 
             # --- Tool: jedox_list_dimensions ---
             elif tool_name == "jedox_list_dimensions":
@@ -417,16 +378,13 @@ async def handle_mcp(request: Request):
                 for dim in dimensions:
                     result_text += f"- {dim.get('name')}\n"
 
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "result": {
-                        "content": [{
-                            "type": "text",
-                            "text": result_text
-                        }]
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {"content": [{"type": "text", "text": result_text}]},
+                        "id": request_id,
+                    }
+                )
 
             # --- Tool: jedox_read_cell ---
             elif tool_name == "jedox_read_cell":
@@ -441,16 +399,13 @@ async def handle_mcp(request: Request):
                 else:
                     result_text = f"Cell value at {coordinates}:\n{cell_value}"
 
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "result": {
-                        "content": [{
-                            "type": "text",
-                            "text": result_text
-                        }]
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {"content": [{"type": "text", "text": result_text}]},
+                        "id": request_id,
+                    }
+                )
 
             # --- Tool: jedox_write_cell ---
             elif tool_name == "jedox_write_cell":
@@ -466,16 +421,13 @@ async def handle_mcp(request: Request):
                 else:
                     result_text = f"Error: {result.get('error')}"
 
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "result": {
-                        "content": [{
-                            "type": "text",
-                            "text": result_text
-                        }]
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {"content": [{"type": "text", "text": result_text}]},
+                        "id": request_id,
+                    }
+                )
 
             # --- Tool: jedox_read_range ---
             elif tool_name == "jedox_read_range":
@@ -491,56 +443,57 @@ async def handle_mcp(request: Request):
                     value = cell.get("value")
                     result_text += f"- {coords}: {value}\n"
 
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "result": {
-                        "content": [{
-                            "type": "text",
-                            "text": result_text
-                        }]
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {"content": [{"type": "text", "text": result_text}]},
+                        "id": request_id,
+                    }
+                )
 
             # --- Unknown Tool ---
             else:
                 logger.warning(f"Unknown tool: {tool_name}")
-                return JSONResponse(content={
-                    "jsonrpc": "2.0",
-                    "error": {
-                        "code": -32601,
-                        "message": f"Tool '{tool_name}' not found"
-                    },
-                    "id": request_id
-                })
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "error": {
+                            "code": -32601,
+                            "message": f"Tool '{tool_name}' not found",
+                        },
+                        "id": request_id,
+                    }
+                )
 
         # ========== Unknown Method ==========
         else:
             logger.warning(f"Unknown method: {method}")
-            return JSONResponse(content={
-                "jsonrpc": "2.0",
-                "error": {
-                    "code": -32601,
-                    "message": f"Method '{method}' not found"
-                },
-                "id": request_id
-            })
+            return JSONResponse(
+                content={
+                    "jsonrpc": "2.0",
+                    "error": {
+                        "code": -32601,
+                        "message": f"Method '{method}' not found",
+                    },
+                    "id": request_id,
+                }
+            )
 
     except Exception as e:
         logger.error(f"Error handling request: {str(e)}")
-        return JSONResponse(content={
-            "jsonrpc": "2.0",
-            "error": {
-                "code": -32603,
-                "message": str(e)
-            },
-            "id": 1
-        })
+        return JSONResponse(
+            content={
+                "jsonrpc": "2.0",
+                "error": {"code": -32603, "message": str(e)},
+                "id": 1,
+            }
+        )
 
 
 # ========================================
 # Health Check & Info Endpoints
 # ========================================
+
 
 @app.get("/")
 async def root():
@@ -552,8 +505,8 @@ async def root():
         "endpoints": {
             "/mcp": "MCP protocol endpoint",
             "/health": "Health check",
-            "/tools": "List available tools"
-        }
+            "/tools": "List available tools",
+        },
     }
 
 
@@ -563,7 +516,9 @@ async def health():
     return {
         "status": "healthy",
         "jedox_server": JEDOX_SERVER,
-        "token_configured": bool(JEDOX_TOKEN and JEDOX_TOKEN != "your_access_token_here")
+        "token_configured": bool(
+            JEDOX_TOKEN and JEDOX_TOKEN != "your_access_token_here"
+        ),
     }
 
 
@@ -584,7 +539,9 @@ if __name__ == "__main__":
     print("Starting Jedox MCP Server")
     print("=" * 60)
     print(f"Jedox Server: {JEDOX_SERVER}")
-    print(f"Token configured: {bool(JEDOX_TOKEN and JEDOX_TOKEN != 'your_access_token_here')}")
+    print(
+        f"Token configured: {bool(JEDOX_TOKEN and JEDOX_TOKEN != 'your_access_token_here')}"
+    )
     print("\nAvailable tools:")
     for tool in tools:
         print(f"  - {tool['name']}: {tool['description']}")

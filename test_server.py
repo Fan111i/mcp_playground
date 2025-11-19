@@ -32,8 +32,7 @@ class TestMCPProtocol:
     def test_tools_list(self):
         """Test MCP tools/list method"""
         response = client.post(
-            "/mcp",
-            json={"jsonrpc": "2.0", "method": "tools/list", "id": 1}
+            "/mcp", json={"jsonrpc": "2.0", "method": "tools/list", "id": 1}
         )
         assert response.status_code == 200
         data = response.json()
@@ -48,12 +47,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "plus",
-                    "arguments": {"a": 5, "b": 3}
-                },
-                "id": 1
-            }
+                "params": {"name": "plus", "arguments": {"a": 5, "b": 3}},
+                "id": 1,
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -68,12 +64,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "sub",
-                    "arguments": {"a": 10, "b": 4}
-                },
-                "id": 1
-            }
+                "params": {"name": "sub", "arguments": {"a": 10, "b": 4}},
+                "id": 1,
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -86,12 +79,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "mul",
-                    "arguments": {"a": 6, "b": 7}
-                },
-                "id": 1
-            }
+                "params": {"name": "mul", "arguments": {"a": 6, "b": 7}},
+                "id": 1,
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -104,12 +94,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "div",
-                    "arguments": {"a": 20, "b": 4}
-                },
-                "id": 1
-            }
+                "params": {"name": "div", "arguments": {"a": 20, "b": 4}},
+                "id": 1,
+            },
         )
         assert response.status_code == 200
         data = response.json()
@@ -122,12 +109,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "div",
-                    "arguments": {"a": 10, "b": 0}
-                },
-                "id": 1
-            }
+                "params": {"name": "div", "arguments": {"a": 10, "b": 0}},
+                "id": 1,
+            },
         )
         assert response.status_code == 400
         data = response.json()
@@ -141,12 +125,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "plus",
-                    "arguments": {"a": 5}
-                },
-                "id": 1
-            }
+                "params": {"name": "plus", "arguments": {"a": 5}},
+                "id": 1,
+            },
         )
         assert response.status_code == 400
         data = response.json()
@@ -159,12 +140,9 @@ class TestMCPProtocol:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "unknown_tool",
-                    "arguments": {"a": 1, "b": 2}
-                },
-                "id": 1
-            }
+                "params": {"name": "unknown_tool", "arguments": {"a": 1, "b": 2}},
+                "id": 1,
+            },
         )
         assert response.status_code == 400
         data = response.json()
@@ -239,12 +217,9 @@ class TestHistory:
             json={
                 "jsonrpc": "2.0",
                 "method": "tools/call",
-                "params": {
-                    "name": "history",
-                    "arguments": {"limit": 5}
-                },
-                "id": 1
-            }
+                "params": {"name": "history", "arguments": {"limit": 5}},
+                "id": 1,
+            },
         )
         assert response.status_code == 200
         data = response.json()
