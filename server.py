@@ -166,7 +166,36 @@ async def handle_mcp(request: Request):
             tool_name = params.get("name")
             arguments = params.get("arguments", {})
 
-            # Get parameters
+            # Handle history tool first (doesn't need a and b)
+            if tool_name == "history":
+                limit = arguments.get("limit", 10)
+                history = get_calculation_history(limit)
+                history_text = "\n".join(
+                    [
+                        f"{h['id']}. {h['operation']}: {h['operand_a']} and {h['operand_b']} = {h['result']} ({h['timestamp']})"
+                        for h in history
+                    ]
+                )
+                return JSONResponse(
+                    content={
+                        "jsonrpc": "2.0",
+                        "result": {
+                            "content": [
+                                {
+                                    "type": "text",
+                                    "text": (
+                                        f"Calculation History (last {limit}):\n{history_text}"
+                                        if history
+                                        else "No calculation history found"
+                                    ),
+                                }
+                            ]
+                        },
+                        "id": request_id,
+                    }
+                )
+
+            # Get parameters for math operations
             a = arguments.get("a")
             b = arguments.get("b")
 
@@ -264,34 +293,6 @@ async def handle_mcp(request: Request):
                                 {
                                     "type": "text",
                                     "text": f"Division: {a} / {b} = {result}",
-                                }
-                            ]
-                        },
-                        "id": request_id,
-                    }
-                )
-
-            elif tool_name == "history":
-                limit = arguments.get("limit", 10)
-                history = get_calculation_history(limit)
-                history_text = "\n".join(
-                    [
-                        f"{h['id']}. {h['operation']}: {h['operand_a']} and {h['operand_b']} = {h['result']} ({h['timestamp']})"
-                        for h in history
-                    ]
-                )
-                return JSONResponse(
-                    content={
-                        "jsonrpc": "2.0",
-                        "result": {
-                            "content": [
-                                {
-                                    "type": "text",
-                                    "text": (
-                                        f"Calculation History (last {limit}):\n{history_text}"
-                                        if history
-                                        else "No calculation history found"
-                                    ),
                                 }
                             ]
                         },
